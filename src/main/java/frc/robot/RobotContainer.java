@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.XboxController;
 import frc.robot.Constants.AutoConstants;
 import frc.robot.Constants.DriveConstants;
 import frc.robot.Constants.OIConstants;
+import frc.robot.commands.drive.DRIVE_WITH_HEADING;
 import frc.robot.subsystems.DriveSubsystem;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.RunCommand;
@@ -72,6 +73,38 @@ public class RobotContainer {
         .whileTrue(new RunCommand(
             () -> m_robotDrive.setX(),
             m_robotDrive));
+
+    m_driverController.a().onTrue(
+      new DRIVE_WITH_HEADING(
+          m_robotDrive, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband)*.125, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband)*.125,
+          180)
+      .until(() -> Math.abs(m_driverController.getRightX()) > 0.3));
+
+    m_driverController.y().onTrue(
+        new DRIVE_WITH_HEADING(
+            m_robotDrive, 
+            () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband)*.125, 
+            () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband)*.125,
+            0)
+        .until(() -> Math.abs(m_driverController.getRightX()) > 0.3));
+      
+  m_driverController.b().onTrue(
+      new DRIVE_WITH_HEADING(
+          m_robotDrive, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband)*.125, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband)*.125,
+          270)
+      .until(() -> Math.abs(m_driverController.getRightX()) > 0.3));
+
+  m_driverController.x().onTrue(
+      new DRIVE_WITH_HEADING(
+          m_robotDrive, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftY(), OIConstants.kDriveDeadband)*.125, 
+          () -> -MathUtil.applyDeadband(m_driverController.getLeftX(), OIConstants.kDriveDeadband)*.125,
+          90)
+      .until(() -> Math.abs(m_driverController.getRightX()) > 0.3));
 
     m_driverController.leftBumper().onTrue(m_robotDrive.zeroGyro());
   }
