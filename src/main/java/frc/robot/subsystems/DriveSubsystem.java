@@ -14,12 +14,12 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.util.WPIUtilJNI;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.shuffleboard.BuiltInWidgets;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
-import edu.wpi.first.wpilibj.shuffleboard.WidgetType;
 import frc.robot.Constants.DriveConstants;
 import frc.utils.SwerveUtils;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -27,7 +27,29 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
   // Logging
-  ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+  private ShuffleboardTab driveTab = Shuffleboard.getTab("Drive");
+  private GenericEntry gyroEntry = driveTab.add("Gyro", 0).withWidget(BuiltInWidgets.kGyro).getEntry();
+
+  private GenericEntry flRealAngle = driveTab.add("FL Real Angle", 0).getEntry();
+  private GenericEntry frRealAngle = driveTab.add("FR Real Angle", 0).getEntry();
+  private GenericEntry rlRealAngle = driveTab.add("RL Real Angle", 0).getEntry();
+  private GenericEntry rrRealAngle = driveTab.add("RR Real Angle", 0).getEntry();
+
+  private GenericEntry flDesiredAngle = driveTab.add("FL Desired Angle", 0).getEntry();
+  private GenericEntry frDesiredAngle = driveTab.add("FR Desired Angle", 0).getEntry();
+  private GenericEntry rlDesiredAngle = driveTab.add("RL Desired Angle", 0).getEntry();
+  private GenericEntry rrDesiredAngle = driveTab.add("RR Desired Angle", 0).getEntry();
+
+  private GenericEntry flRealSpeed = driveTab.add("FL Real Speed", 0).getEntry();
+  private GenericEntry frRealSpeed = driveTab.add("FR Real Speed", 0).getEntry();
+  private GenericEntry rlRealSpeed = driveTab.add("RL Real Speed", 0).getEntry();
+  private GenericEntry rrRealSpeed = driveTab.add("RR Real Speed", 0).getEntry();
+
+  private GenericEntry flDesiredSpeed = driveTab.add("FL Desired Speed", 0).getEntry();
+  private GenericEntry frDesiredSpeed = driveTab.add("FR Desired Speed", 0).getEntry();
+  private GenericEntry rlDesiredSpeed = driveTab.add("RL Desired Speed", 0).getEntry();
+  private GenericEntry rrDesiredSpeed = driveTab.add("RR Desired Speed", 0).getEntry();
+
 
   // Create MAXSwerveModules
   private final MAXSwerveModule m_frontLeft = new MAXSwerveModule(
@@ -91,17 +113,17 @@ public class DriveSubsystem extends SubsystemBase {
         });
 
     //LOGGING
-    driveTab.add("Gyro", -m_gyro.getAngle()).withWidget(BuiltInWidgets.kGyro);
+    gyroEntry.setDouble(m_gyro.getAngle());
 
-    driveTab.add("FL Real Angle", m_frontLeft.getState().angle.getDegrees());
-    driveTab.add("FR Real Angle", m_frontRight.getState().angle.getDegrees());
-    driveTab.add("RL Real Angle", m_rearLeft.getState().angle.getDegrees());
-    driveTab.add("RR Real Angle", m_rearRight.getState().angle.getDegrees());
+    flRealAngle.setDouble(m_frontLeft.getState().angle.getDegrees());
+    frRealAngle.setDouble(m_frontRight.getState().angle.getDegrees());
+    rlRealAngle.setDouble(m_rearLeft.getState().angle.getDegrees());
+    rrRealAngle.setDouble(m_rearRight.getState().angle.getDegrees());
 
-    driveTab.add("FL Real Angle", m_frontLeft.getState().speedMetersPerSecond);
-    driveTab.add("FR Real Angle", m_frontRight.getState().speedMetersPerSecond);
-    driveTab.add("RL Real Angle", m_rearLeft.getState().speedMetersPerSecond);
-    driveTab.add("RR Real Angle", m_rearRight.getState().speedMetersPerSecond);
+    flRealSpeed.setDouble(m_frontLeft.getState().speedMetersPerSecond);
+    frRealSpeed.setDouble(m_frontRight.getState().speedMetersPerSecond);
+    rlRealSpeed.setDouble(m_rearLeft.getState().speedMetersPerSecond);
+    rrRealSpeed.setDouble(m_rearRight.getState().speedMetersPerSecond);
 
   }
 
@@ -205,7 +227,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     var swerveModuleStates = DriveConstants.kDriveKinematics.toSwerveModuleStates(
         fieldRelative
-            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(m_gyro.getAngle()))
+            ? ChassisSpeeds.fromFieldRelativeSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered, Rotation2d.fromDegrees(-m_gyro.getAngle()))
             : new ChassisSpeeds(xSpeedDelivered, ySpeedDelivered, rotDelivered));
     SwerveDriveKinematics.desaturateWheelSpeeds(
         swerveModuleStates, DriveConstants.kMaxSpeedMetersPerSecond);
@@ -215,15 +237,16 @@ public class DriveSubsystem extends SubsystemBase {
     m_rearRight.setDesiredState(swerveModuleStates[3]);
 
     // LOGGING
-    driveTab.add("FL Desired Angle", swerveModuleStates[0].angle.getDegrees());
-    driveTab.add("FR Desired Angle", swerveModuleStates[1].angle.getDegrees());
-    driveTab.add("RL Desired Angle", swerveModuleStates[2].angle.getDegrees());
-    driveTab.add("RL Desired Angle", swerveModuleStates[3].angle.getDegrees());
+    flDesiredAngle.setDouble(swerveModuleStates[0].angle.getDegrees());
+    frDesiredAngle.setDouble(swerveModuleStates[1].angle.getDegrees());
+    rlDesiredAngle.setDouble(swerveModuleStates[2].angle.getDegrees());
+    rrDesiredAngle.setDouble(swerveModuleStates[3].angle.getDegrees());
 
-    driveTab.add("FL Desired Speed", swerveModuleStates[0].speedMetersPerSecond);
-    driveTab.add("FR Desired Speed", swerveModuleStates[1].speedMetersPerSecond);
-    driveTab.add("RL Desired Speed", swerveModuleStates[2].speedMetersPerSecond);
-    driveTab.add("RL Desired Speed", swerveModuleStates[3].speedMetersPerSecond);
+    flDesiredSpeed.setDouble(swerveModuleStates[0].speedMetersPerSecond);
+    frDesiredSpeed.setDouble(swerveModuleStates[1].speedMetersPerSecond);
+    rlDesiredSpeed.setDouble(swerveModuleStates[2].speedMetersPerSecond);
+    rrDesiredSpeed.setDouble(swerveModuleStates[3].speedMetersPerSecond);
+
   }
 
   /**
