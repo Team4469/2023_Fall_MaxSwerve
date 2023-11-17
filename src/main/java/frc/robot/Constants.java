@@ -54,16 +54,26 @@ public final class Constants {
     public static final double kBackLeftChassisAngularOffset = Math.PI;
     public static final double kBackRightChassisAngularOffset = Math.PI / 2;
 
-    // SPARK MAX CAN IDs
-    public static final int kFrontLeftDrivingCanId = 11;
-    public static final int kFrontRightDrivingCanId = 21;
-    public static final int kRearLeftDrivingCanId = 31;
-    public static final int kRearRightDrivingCanId = 41;
+    // Module Configuration (Ensure Driving is (Mod# * 10 + 1) and Turning is (Mod# * 10 + 2))
 
-    public static final int kFrontLeftTurningCanId = 12;
-    public static final int kFrontRightTurningCanId = 22;
-    public static final int kRearLeftTurningCanId = 32;
-    public static final int kRearRightTurningCanId = 42;
+    public static final int kFrontLeftModuleNum = 1;
+    public static final int kFrontRightModuleNum = 2;
+    public static final int kRearLeftModuleNum = 3;
+    public static final int kRearRightModuleNum = 4;
+
+    public static final int kDrivingIdOffset = 1;
+    public static final int kTurningIdOffset = 2;
+
+    // SPARK MAX CAN IDs
+    public static final int kFrontLeftDrivingCanId = kFrontLeftModuleNum * 10 + kDrivingIdOffset;
+    public static final int kFrontRightDrivingCanId = kFrontRightModuleNum * 10 + kDrivingIdOffset;
+    public static final int kRearLeftDrivingCanId = kRearLeftModuleNum * 10 + kDrivingIdOffset;
+    public static final int kRearRightDrivingCanId = kRearRightModuleNum * 10 + kDrivingIdOffset;
+
+    public static final int kFrontLeftTurningCanId = kFrontLeftModuleNum * 10 + kTurningIdOffset;
+    public static final int kFrontRightTurningCanId = kFrontRightModuleNum * 10 + kTurningIdOffset;
+    public static final int kRearLeftTurningCanId = kRearLeftModuleNum * 10 + kTurningIdOffset;
+    public static final int kRearRightTurningCanId = kRearRightModuleNum * 10 + kTurningIdOffset;
 
     public static final boolean kGyroReversed = true;
   }
