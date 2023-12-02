@@ -16,7 +16,7 @@ public class TunableNumber {
 
   /**
    * Create a new TunableNumber
-   * 
+   *
    * @param dashboardKey Key on dashboard
    */
   public TunableNumber(String dashboardKey) {
@@ -25,7 +25,7 @@ public class TunableNumber {
 
   /**
    * Create a new TunableNumber with the default value
-   * 
+   *
    * @param dashboardKey Key on dashboard
    * @param defaultValue Default value
    */
@@ -36,7 +36,7 @@ public class TunableNumber {
 
   /**
    * Get the default value for the number that has been set
-   * 
+   *
    * @return The default value
    */
   public double getDefault() {
@@ -45,33 +45,31 @@ public class TunableNumber {
 
   /**
    * Set the default value of the number
-   * 
+   *
    * @param defaultValue The default value
    */
   public void setDefault(double defaultValue) {
     this.defaultValue = defaultValue;
     if (Constants.tuningMode) {
       // This makes sure the data is on NetworkTables but will not change it
-      SmartDashboard.putNumber(key,
-          SmartDashboard.getNumber(key, defaultValue));
+      SmartDashboard.putNumber(key, SmartDashboard.getNumber(key, defaultValue));
     }
   }
 
   /**
    * Get the current value, from dashboard if available and in tuning mode
-   * 
+   *
    * @return The current value
    */
   public double get() {
-    return Constants.tuningMode ? SmartDashboard.getNumber(key, defaultValue)
-        : defaultValue;
+    return Constants.tuningMode ? SmartDashboard.getNumber(key, defaultValue) : defaultValue;
   }
 
   /**
    * Checks whether the number has changed since our last check
-   * 
+   *
    * @return True if the number has changed since the last time this method was called, false
-   *         otherwise
+   *     otherwise
    */
   public boolean hasChanged() {
     double currentValue = get();
