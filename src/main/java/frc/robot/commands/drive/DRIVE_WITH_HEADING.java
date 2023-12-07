@@ -102,9 +102,9 @@ public class DRIVE_WITH_HEADING extends CommandBase {
     }
 
     double xVelo =
-        m_translationXSupplier.getAsDouble() * DriveConstants.kMaxSpeedMetersPerSecond * .25;
+        m_translationXSupplier.getAsDouble() * DriveConstants.kMaxSpeedMetersPerSecond;
     double yVelo =
-        m_translationYSupplier.getAsDouble() * DriveConstants.kMaxSpeedMetersPerSecond * .25;
+        m_translationYSupplier.getAsDouble() * DriveConstants.kMaxSpeedMetersPerSecond;
 
     if (DriverStation.getAlliance() == Alliance.Red) {
       xVelo *= -1;
